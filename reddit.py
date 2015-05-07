@@ -5,12 +5,12 @@ import time
 r = praw.Reddit(user_agent="Subreddit Link Fixer by /u/Jragon713")
 r.login("subreddit-link-fixer", "fixer-bot")
 already_done = []
-#i = 0
+# i = 0
 
 while True:
-#	i += 1
-#	print("Sweep #{0}".format(i))
-	all_comments = r.get_comments("test")
+	# i += 1
+	# print("Sweep #{0}".format(i))
+	all_comments = r.get_comments("all")
 	for comment in all_comments:
 		if comment.id not in already_done:
 			words = str(comment).split()
