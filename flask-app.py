@@ -4,25 +4,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-	return "Index Page"
-
-
-@app.route("/hello/")
-def hello():
-	return "Hello World"
-
-
-@app.route("/user/<username>/")
-def show_user_profile(username):
-	return "User {0}".format(username)
+	return "This is the index page. <a href=\"post/0/\">Hello!</a>"
 
 
 @app.route("/post/<int:post_id>/")
 def show_post(post_id):
-	if post_id in posts:
-		return posts[post_id]
-	else:
-		return "Error: could not find post #{0}.".format(post_id)
+	post_str = posts[post_id] if post_id in posts else "Error: could not find post #{0}.".format(post_id)
+	return post_str+"<br><a href=\"../"+str(max(0, post_id-1))+"\"><</a> <a href=\"../"+str(post_id+1)+"\">></a>"
 
 
 if __name__ == "__main__":
