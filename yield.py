@@ -1,18 +1,8 @@
-from pprint import pprint as pp
-
-
 def mod(it, div, val):
 	for i in it:
 		if i%div == val:
 			yield i
-
-
-def loop(it, fn = pp):
-	while True:
-		try:
-			fn(it.next())
-		except:
-			break
+# alternative to [i for i in it if i%div == val]
 
 
 def original(it): return mod(it, div = 1, val = 0)
@@ -24,5 +14,5 @@ data = range(20)
 for fn in [original, even, odd]:
 	print(fn.__name__)
 	it = fn(data)
-	loop(it)
+	print list(it)
 	print("")
