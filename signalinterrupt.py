@@ -4,8 +4,8 @@ import time
 
 
 def signal_handler(signal, frame):
-		print("\nYou pressed Ctrl+C!")
-		sys.exit(0)
+	print("You pressed Ctrl+C!")
+	sys.exit(0)
 
 
 def main(argv):
