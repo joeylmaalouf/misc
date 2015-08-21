@@ -1,12 +1,11 @@
 from collections import Counter
-import operator
 import praw
 import sys
 
 
 if __name__ == "__main__":
 	r = praw.Reddit(user_agent = sys.argv[2] if len(sys.argv) > 2 else "flair_checker_user_agent")
-	sr = r.get_subreddit(subreddit_name = sys.argv[1] if len(sys.argv) > 1 else "dota2")
+	sr = r.get_subreddit(subreddit_name = sys.argv[1] if len(sys.argv) > 1 else "ssbpm")
 	print("Parsing subreddit /r/{0}...".format(sr.display_name))
 	old_id = ""
 	posts = {}
