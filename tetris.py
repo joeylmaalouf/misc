@@ -1,40 +1,39 @@
 import pygame
-from sys import argv
+from sys import argv, exit
 from time import sleep
 
 
-def initialize(grid, n_rows, n_cols):
-	for i in range(n_rows):
-		row = []
-		for j in range(n_cols):
-			row.append(False)
-		grid.append(row)
+class Game(object):
+	def __init__(self, dimensions = (28, 8), block_size = (24, 32)):
+		super(Game, self).__init__()
+		pygame.init()
+		self.dimensions = dimensions
+		self.block_size = block_size
+		self.colors = ((200, 200, 200), (100, 100, 100))
+		self.grid = [[False]*dimensions[1] for _ in range(dimensions[0])]
+		self.screen = pygame.display.set_mode((block_size[1]*dimensions[1], block_size[0]*dimensions[0]))
 
-
-def main(argv):
-	pygame.init()
-	grid = []
-	dimensions = (24, 8)
-	size = (24, 32)
-	colors = ((200, 200, 200), (100, 100, 100))
-	initialize(grid, dimensions[0], dimensions[1])
-	screen = pygame.display.set_mode((size[1]*dimensions[1], size[0]*dimensions[0]))
-
-	while True:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				exit()
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_ESCAPE:
+	def run(self):
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
 					exit()
+				elif event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_ESCAPE:
+						exit()
 
-		for i in range(len(grid)):
-			for j in range(len(grid[0])):
-				pygame.draw.rect(screen, colors[int(grid[i][j])], pygame.Rect(size[1]*j, size[0]*i, size[1]-1, size[0]-1))
+			for i in range(len(self.grid)):
+				for j in range(len(self.grid[0])):
+					pygame.draw.rect(
+						self.screen,
+						self.colors[int(self.grid[i][j])],
+						pygame.Rect(self.block_size[1] * j, self.block_size[0] * i, self.block_size[1] - 1, self.block_size[0] - 1) # -1 to show border lines
+					)
 
-		pygame.display.flip()
-		sleep(0.25)
+			pygame.display.flip()
+			sleep(0.25)
 
 
 if __name__ == "__main__":
-	main(argv)
+	tetris = Game()
+	tetris.run()
