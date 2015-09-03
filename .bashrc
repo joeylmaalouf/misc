@@ -10,4 +10,3 @@ alias rv='find . -name "*~" -exec rm -v '{}' \; && find . -name "#*#" -exec rm -
 say() { pico2wave -w="tmp.wav" "$@" &> /dev/null; aplay "tmp.wav" &> /dev/null; rm "tmp.wav" &> /dev/null; }
 exists() { printf "The \"%s\" command does " $1; if ! command -v $1 &> /dev/null; then printf "not "; fi; printf "exist.\n"; }
 up() { for ((i=1; i <= $1; i++)) do cd ..; done; }
-[[ -s "$HOME/.qfc/bin/qfc.sh" ]] && source "$HOME/.qfc/bin/qfc.sh" # github.com/pindexis/qfc
