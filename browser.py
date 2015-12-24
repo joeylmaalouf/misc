@@ -11,10 +11,9 @@ def lmgtfy(query):
   search_box = driver.find_element_by_name("q")
   for key in query:
     search_box.send_keys(key)
-    sleep(0.1)
+    sleep(0.125)
   search_box.send_keys(Keys.RETURN)
-  sleep(2)
-  driver.close()
+  # driver.close()
 
 
 def open_pages(urls):
@@ -28,6 +27,14 @@ def open_pages(urls):
   # driver.quit()
 
 
+def archive(url, filename):
+  driver = webdriver.Firefox()
+  driver.maximize_window()
+  driver.get(url)
+  driver.save_screenshot(filename)
+  driver.quit()
+
+
 if __name__ == "__main__":
   lmgtfy("never gonna give you up")
   open_pages([
@@ -35,3 +42,4 @@ if __name__ == "__main__":
     "https://www.reddit.com/r/SSBPM",
     "https://www.reddit.com/r/DotA2"
   ])
+  archive("https://www.twitch.tv", "archived_twitch.png")
