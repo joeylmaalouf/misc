@@ -23,6 +23,9 @@ CODES = {
 class GCAdapter(object):
   # http://www.mayflash.com/Products/PCUSB/PC051.html
   def __init__(self, whitelist = [], blacklist = [], verbose = False):
+    # whitelist: device paths to scan; if empty, scan all connected device paths instead
+    # blacklist: device paths to ignore
+    # verbose: if True, print any useful information
     super(GCAdapter, self).__init__()
     devices = whitelist if whitelist else list_devices()
     self.controllers = [InputDevice(path) for path in devices if path not in blacklist]
@@ -32,9 +35,12 @@ class GCAdapter(object):
         print(c)
 
   def get_controller_state(self, device_num = 0):
-    pressed = self.controllers[device_num].active_keys()
+    try:
+      pressed = self.controllers[device_num].active_keys()
+    except IndexError:
+      raise IndexError("Invalid device index given! Please make sure your controllers are plugged in.")
     return {
-      button_code: int(button_code in pressed) for button_code in BUTTONS.keys()
+      button_code: button_code in pressed for button_code in BUTTONS.keys()
     }
 
 
