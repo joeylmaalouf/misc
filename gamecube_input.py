@@ -39,7 +39,7 @@ class GCAdapter(object):
     self.controllers = [InputDevice(path) for path in devices if path not in blacklist]
     self.controller_states = [{code: 0 for code in BUTTONS.keys()} for _ in self.controllers]
     if verbose:
-      print("Capturing input from the following devices: ")
+      print("Capturing input from the following {n} devices: ".format(n = len(self.controllers)))
       for c in self.controllers:
         print(c)
 
