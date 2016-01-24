@@ -1,20 +1,28 @@
-from evdev import InputDevice, list_devices
+from evdev import ecodes, InputDevice, list_devices
 
 
+# code to button mapping
 BUTTONS = {
+  000: "Control Stick X",
+  001: "Control Stick Y",
+  002: "C Stick Y",
+  003: "L Analog",
+  004: "R Analog",
+  005: "C Stick X",
   288: "X",
   289: "A",
   290: "B",
   291: "Y",
-  292: "L",
-  293: "R",
+  292: "L Digital",
+  293: "R Digital",
   295: "Z",
   297: "Start",
-  300: "DPadUp",
-  301: "DPadRight",
-  302: "DPadDown",
-  303: "DPadLeft"
+  300: "DPad Up",
+  301: "DPad Right",
+  302: "DPad Down",
+  303: "DPad Left"
 }
+# button to code mapping
 CODES = {
   value: key for key, value in BUTTONS.items()
 }
@@ -23,37 +31,42 @@ CODES = {
 class GCAdapter(object):
   # http://www.mayflash.com/Products/PCUSB/PC051.html
   def __init__(self, whitelist = [], blacklist = [], verbose = False):
-    # whitelist: device paths to scan; if empty, scan all connected device paths instead
+    # whitelist: device paths to attach to; if empty, use all connected device paths instead
     # blacklist: device paths to ignore
     # verbose: if True, print any useful information
     super(GCAdapter, self).__init__()
     devices = whitelist if whitelist else list_devices()
     self.controllers = [InputDevice(path) for path in devices if path not in blacklist]
+    self.controller_states = [{code: 0 for code in BUTTONS.keys()} for _ in self.controllers]
     if verbose:
       print("Capturing input from the following devices: ")
       for c in self.controllers:
         print(c)
 
-  def get_controller_state(self, device_num = 0):
-    try:
-      pressed = self.controllers[device_num].active_keys()
-    except IndexError:
-      raise IndexError("Invalid device index given! Please make sure your controllers are plugged in.")
-    return {
-      button_code: button_code in pressed for button_code in BUTTONS.keys()
-    }
+  def update(self):
+    for i in range(len(self.controllers)):
+      try:
+        for event in self.controllers[i].read():
+          # button events: digital, value 1 => pressed, value 0 => released
+          # joystick events: analog, value = position
+          if event.type == ecodes.EV_KEY or event.type == ecodes.EV_ABS:
+            state[event.code] = int(event.value)
+      except IOError:
+        # no events found
+        pass
 
 
 if __name__ == "__main__":
+  # example usage
   from time import sleep
-  # adapter = GCAdapter(whitelist = ["/dev/input/event7", "/dev/input/event8"], blacklist = [], verbose = True)
-  # adapter = GCAdapter(whitelist = [], blacklist = ["/dev/input/event7"], verbose = True)
+  # adapter = GCAdapter(whitelist = ["/dev/input/event17", "/dev/input/event18"], blacklist = [], verbose = True)
+  # adapter = GCAdapter(whitelist = [], blacklist = ["/dev/input/event17"], verbose = True)
   adapter = GCAdapter(verbose = True)
   while True:
-    pressed = adapter.get_controller_state(0)
-    print(pressed)
     sleep(1.0 / 60)
-    if pressed[CODES["L"]] and pressed[CODES["R"]] and pressed[CODES["A"]] and pressed[CODES["Start"]]:
+    adapter.update()
+    state = adapter.controller_states[0]
+    print(state)
+    # L + R + A + Start to quit
+    if state[CODES["L Digital"]] and state[CODES["R Digital"]] and state[CODES["A"]] and state[CODES["Start"]]:
       break
-
-# TODO: Control Stick and C-Stick
