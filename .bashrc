@@ -1,4 +1,4 @@
-PS1='\[\e[0;32m\]\u\[\e[0;37m\]@\h:\w \[\e[0;92m\]♧\[\e[97m\] '
+PS1='\[\e[0;32m\]\u\[\e[0;37m\]@\h:\w \[\e[0;92m\]♧\[\e[97m\]  '
 complete -d cd
 alias apt-stuff='sudo apt-get update; sudo apt-get upgrade; sudo apt-get autoremove; sudo apt-get autoclean'
 alias clock='while true; do date; echo -ne "\033[1F"; sleep 1; done'
