@@ -23,7 +23,7 @@ def open_pages(urls):
     driver.get(url)
     # assert url == driver.current_url, "Redirected!"
     if i < len(urls) - 1:
-      driver.find_element_by_tag_name("body").send_keys(Keys.CONTROL + "t") 
+      driver.find_element_by_tag_name("body").send_keys(Keys.CONTROL + "t")
   # driver.quit()
 
 
